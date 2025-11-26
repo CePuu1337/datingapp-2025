@@ -31,13 +31,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+ options.ConfigureHttpsDefaults(httpsOptions =>
+ {
+     httpsOptions.ServerCertificate = null;
+ });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
-.WithOrigins("http://localhost:4200", "https://localhost:4200"));
+.WithOrigins("https://localhost:4200", "http://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();
